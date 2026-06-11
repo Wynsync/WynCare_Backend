@@ -181,9 +181,18 @@ export const callback = async (req, res) => {
     console.log("TOKEN SAVED");
 
     // 🔥 REDIRECT UI
-    return res.redirect(
-      `${process.env.FRONTEND_URL}${redirectPage}?success=true`
-    );
+    // return res.redirect(
+    //   `${process.env.FRONTEND_URL}?success=true`
+    // );
+
+
+    const redirectPage =
+    state.redirect || "/settings/accounts";
+
+  return res.redirect(
+    `${process.env.FRONTEND_URL}${redirectPage}?success=true`
+  );
+
   } catch (error) {
 
     console.log("========== FULL ERROR ==========");
