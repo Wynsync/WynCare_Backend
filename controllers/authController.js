@@ -51,7 +51,7 @@ export const callback = async (req, res) => {
 
     const userId = state.userId;
 
-    const redirectPage = state.redirect;
+    // const redirectPage = state.redirect;
 
     if (!code) {
       return res.send("No code received");
