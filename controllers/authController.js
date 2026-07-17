@@ -2,6 +2,8 @@ import axios from "axios";
 
 import AccessContainer from "../models/AccessContainer.js";
 
+import TenantSubscription from "../models/TenantSubscription.js";
+
 import connectDB from "../config/db.js";
 
 // 🔥 LOGIN
@@ -106,7 +108,7 @@ export const callback = async (req, res) => {
         },
       }
     );
-    
+
     console.log("IG RESPONSE:", igRes.data);
 
     // 🔥 CHECK EXISTING PAGE
@@ -160,11 +162,26 @@ export const callback = async (req, res) => {
 
           instagramId:
             igRes.data.instagram_business_account?.id || "",
-          
+
           instagramUsername:
             igRes.data.instagram_business_account?.username || "",
 
         });
+
+        let channelsToAdd = 1;
+
+        if (igRes.data.instagram_business_account?.id) {
+          channelsToAdd = 2;
+        }
+
+        await TenantSubscription.updateOne(
+          { user_id: userId },
+          {
+            $inc: {
+              "usage.channels_connected": channelsToAdd
+            }
+          }
+        );
 
         console.log("NEW PAGE INSERTED");
 
@@ -187,11 +204,11 @@ export const callback = async (req, res) => {
 
 
     const redirectPage =
-    state.redirect || "/settings/accounts";
+      state.redirect || "/settings/accounts";
 
-  return res.redirect(
-    `${process.env.FRONTEND_URL}${redirectPage}?success=true`
-  );
+    return res.redirect(
+      `${process.env.FRONTEND_URL}${redirectPage}?success=true`
+    );
 
   } catch (error) {
 
